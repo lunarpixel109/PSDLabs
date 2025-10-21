@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PSDLabs", "PSDLabs\PSDLabs.csproj", "{496B50B6-3342-41DF-8DC3-D6E9FBC7643A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighScoreLibrary", "HighScoreLibrary\HighScoreLibrary.csproj", "{8FE91EEA-E8A3-485E-9975-9322F1172121}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{496B50B6-3342-41DF-8DC3-D6E9FBC7643A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{496B50B6-3342-41DF-8DC3-D6E9FBC7643A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{496B50B6-3342-41DF-8DC3-D6E9FBC7643A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{496B50B6-3342-41DF-8DC3-D6E9FBC7643A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FE91EEA-E8A3-485E-9975-9322F1172121}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FE91EEA-E8A3-485E-9975-9322F1172121}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FE91EEA-E8A3-485E-9975-9322F1172121}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FE91EEA-E8A3-485E-9975-9322F1172121}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7EE62B41-867F-4AB4-A413-3479F9F386E6}
+	EndGlobalSection
+EndGlobal
