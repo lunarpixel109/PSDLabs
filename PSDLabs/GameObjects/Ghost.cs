@@ -1,12 +1,18 @@
 ﻿using GameCode;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace GameObjects
 {
-    class Player : GameObject
+    class Ghost: GameObject
     {
-        private int score;
 
-        public Player(int startX, int startY): base(startX, startY, ConsoleColor.Green) { }
+
+        public Ghost(int startX, int startY, ConsoleColor colour) : base(startX, startY, colour) { }
 
         public override void Update(char[,] maze, ConsoleKey inputKey)
         {
@@ -16,40 +22,18 @@ namespace GameObjects
 
             switch (inputKey)
             {
-                case ConsoleKey.UpArrow:
+                case ConsoleKey.W:
                     Move(0, -1, maze);
                     break;
-                case ConsoleKey.DownArrow:
+                case ConsoleKey.S:
                     Move(0, 1, maze);
                     break;
-                case ConsoleKey.LeftArrow:
+                case ConsoleKey.A:
                     Move(-1, 0, maze);
                     break;
-                case ConsoleKey.RightArrow:
+                case ConsoleKey.D:
                     Move(1, 0, maze);
                     break;
-            }
-            
-        }
-
-        public override void Draw(char[,] maze)
-        {
-            // Only update the position if it has changed
-            if (positionX != previousPositionX || positionY != previousPositionY)
-            {
-                // Erase the previous position
-                Console.SetCursorPosition(previousPositionX, previousPositionY);
-                Console.ForegroundColor = MazeGame.foregroundColor;
-                Console.Write('░');
-                maze[previousPositionY, previousPositionX] = '░';
-
-                // Draw the player at the new position
-                Console.SetCursorPosition(positionX, positionY);
-                Console.ForegroundColor = colour;
-                Console.Write('╬');
-                maze[positionY, positionX] = '╬';
-
-                score++;
             }
         }
 
@@ -65,9 +49,25 @@ namespace GameObjects
             }
         }
 
-        public int getScore()
-        { 
-            return score;
+
+        public override void Draw(char[,] maze)
+        {
+            // Only update the position if it has changed
+            if (positionX != previousPositionX || positionY != previousPositionY)
+            {
+                // Erase the previous position
+                Console.SetCursorPosition(previousPositionX, previousPositionY);
+                Console.ForegroundColor = MazeGame.foregroundColor;
+                Console.Write('░');
+                
+
+                // Draw the player at the new position
+                Console.SetCursorPosition(positionX, positionY);
+                Console.ForegroundColor = colour;
+                Console.Write('E');
+            }
         }
+
+
     }
 }
