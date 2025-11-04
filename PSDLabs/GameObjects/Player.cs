@@ -9,6 +9,9 @@ namespace GameObjects {
 
         public delegate void CollisionEventHandler();
         public event CollisionEventHandler OnCollision;
+
+        public delegate void PositionUpdate(int x, int y);
+        public event PositionUpdate OnPositionUpdate;
         
 
         public override void Update(char[,] maze, ConsoleKey inputKey)
@@ -47,6 +50,7 @@ namespace GameObjects {
             {
                 positionX = newPosX;
                 positionY = newPosY;
+                OnPositionUpdate?.Invoke(newPosX, newPosY);
             }
         }
 

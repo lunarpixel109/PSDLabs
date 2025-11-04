@@ -51,7 +51,7 @@ namespace GameCode {
                     gameObject.Draw(maze);
                 }
 
-
+                
 
 
                 // Exit the game loop on ESC key
@@ -102,6 +102,7 @@ namespace GameCode {
             DrawMaze();
 
             player.OnCollision += HandleCollision;
+            player.OnPositionUpdate += HandlePlayerUpdate;
         }
 
         private void DrawMaze()
@@ -112,6 +113,15 @@ namespace GameCode {
         private void HandleCollision() {
             isRunning = false;
             highScoreManager.EndOfGame(player.getScore());
+        }
+
+        private void HandlePlayerUpdate(int x, int y) {
+            foreach (var gameObject in gameObjects) {
+                if (gameObject.GetType() == typeof(Ghost)) {
+                    Ghost  ghost = (Ghost)gameObject;
+                    ghost.UpdatePlayerPosition(x, y);
+                }
+            }
         }
 
     }
