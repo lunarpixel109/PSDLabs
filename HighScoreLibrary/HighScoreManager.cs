@@ -95,6 +95,8 @@ namespace HighScoreLibrary
 
             // Load and display high scores
             LoadHighScores();
+            
+
         }
 
         public void SortScores()
@@ -122,16 +124,7 @@ namespace HighScoreLibrary
 
             // Bubble sort implementation
             // TODO: Switch to merge sort
-            // TODO: Switch to merge sort
-            var n = players.Count;
-            for (int i = 0; i < n - 1; i++)
-                for (int j = 0; j < n - i - 1; j++)
-                    if (players[j].getScore() > players[j + 1].getScore())
-                    {
-                        var temp = players[j];
-                        players[j] = players[j + 1];
-                        players[j + 1] = temp;
-                    }
+            MergeSort(players);
 
             // Clear the file and save sorted scores
             File.WriteAllText(HighScoreFile, String.Empty);
@@ -142,6 +135,62 @@ namespace HighScoreLibrary
             }
         }
 
+        void MergeSort(List<Player> array) {
+            
+            int length = array.Count;
 
+            if (length <= 1) return; // Base Case
+
+            int middle = length / 2;
+            List<Player> left = new  List<Player>(middle);
+            List<Player> right = new  List<Player>(length - middle);
+
+
+
+            for (int i = 0; i < length; i++) {
+                if (i < middle) {
+                    left.Add(array[i]);
+                } else {
+                    right.Add(array[i]);
+                }
+            }
+
+            MergeSort(left);
+            MergeSort(right);
+            Merge(left, right, array);
+
+
+        }
+
+        void Merge(List<Player> leftArray, List<Player> rightArray, List<Player> array) {
+            
+            int leftSize =  array.Count / 2;
+            int rightSize = array.Count - leftSize;
+            int l = 0, r = 0, i = 0;
+
+            while (l < leftSize && r < rightSize) {
+                if (leftArray[l].getScore() > rightArray[r].getScore()) {
+                    array[i] = leftArray[l];
+                    l++;
+                } else {
+                    array[i] = rightArray[r];
+                    r++;
+                }
+                i++;
+            }
+
+            while (l < leftSize) {
+                array[i] = leftArray[l];
+                i++;
+                l++;
+            }
+            while (r < rightSize) {
+                array[i] = rightArray[r];
+                i++;
+                r++;
+            }
+
+        }
+        
     }
 }

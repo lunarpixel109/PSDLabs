@@ -1,6 +1,8 @@
 ﻿using System;
 using GameObjects;
 using HighScoreLibrary;
+using ConsoleRenderingHelper;
+
 
 namespace GameCode
 {
@@ -15,8 +17,8 @@ namespace GameCode
         Player player;
         List<GameObject> gameObjects;
 
-        public static ConsoleColor foregroundColor = ConsoleColor.DarkGreen;
-        public static ConsoleColor backgroundColor = ConsoleColor.Black;
+        public static Colour foregroundColor = new Colour(0, 143, 5);
+        public static Colour backgroundColor = new Colour(0, 0, 0);
 
 
         ConsoleKey inputKey;
@@ -34,9 +36,6 @@ namespace GameCode
 
             while (isRunning)
             {
-
-                Console.ForegroundColor = foregroundColor;
-                Console.BackgroundColor = backgroundColor;
 
                 if (Console.KeyAvailable)
                 {
@@ -75,13 +74,16 @@ namespace GameCode
 
             highScoreManager.SortScores();
             highScoreManager.DisplayHighScores();
+            
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey(true);
         }
 
         private void Initialize()
         {
             gameObjects = new List<GameObject>();
             player = new Player(1, 1);
-            gameObjects.Add(new Ghost(13, 10, ConsoleColor.Blue));
+            gameObjects.Add(new Ghost(13, 10, new Colour(0, 0, 255)));
 
             maze = new char[,] {
                 {'▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓'},//1
@@ -112,18 +114,7 @@ namespace GameCode
 
         private void DrawMaze()
         {
-
-            Console.ForegroundColor = foregroundColor;
-            Console.BackgroundColor = backgroundColor;
-
-            for (int y = 0; y < maze.GetLength(0); y++)
-            {
-                for (int x = 0; x < maze.GetLength(1); x++)
-                {
-                    Console.SetCursorPosition(x, y);
-                    Console.Write(maze[y, x]);
-                }
-            }
+            ConsoleRendering.DrawCharGrid(0, 0, maze, foregroundColor, backgroundColor);
         }
 
     }

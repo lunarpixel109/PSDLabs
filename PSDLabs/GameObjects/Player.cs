@@ -1,4 +1,5 @@
-﻿using GameCode;
+﻿using ConsoleRenderingHelper;
+using GameCode;
 
 namespace GameObjects
 {
@@ -6,7 +7,7 @@ namespace GameObjects
     {
         private int score;
 
-        public Player(int startX, int startY): base(startX, startY, ConsoleColor.Green) { }
+        public Player(int startX, int startY): base(startX, startY, new Colour(143, 43 ,0), '╬') { }
 
         public override void Update(char[,] maze, ConsoleKey inputKey)
         {
@@ -18,41 +19,24 @@ namespace GameObjects
             {
                 case ConsoleKey.UpArrow:
                     Move(0, -1, maze);
+                    score++;
                     break;
                 case ConsoleKey.DownArrow:
                     Move(0, 1, maze);
+                    score++;
                     break;
                 case ConsoleKey.LeftArrow:
                     Move(-1, 0, maze);
+                    score++;
                     break;
                 case ConsoleKey.RightArrow:
                     Move(1, 0, maze);
+                    score++;
                     break;
             }
             
         }
-
-        public override void Draw(char[,] maze)
-        {
-            // Only update the position if it has changed
-            if (positionX != previousPositionX || positionY != previousPositionY)
-            {
-                // Erase the previous position
-                Console.SetCursorPosition(previousPositionX, previousPositionY);
-                Console.ForegroundColor = MazeGame.foregroundColor;
-                Console.Write('░');
-                maze[previousPositionY, previousPositionX] = '░';
-
-                // Draw the player at the new position
-                Console.SetCursorPosition(positionX, positionY);
-                Console.ForegroundColor = colour;
-                Console.Write('╬');
-                maze[positionY, positionX] = '╬';
-
-                score++;
-            }
-        }
-
+        
         private void Move(int deltaX, int deltaY, char[,] maze)
         {
             int newPosX = positionX + deltaX;
