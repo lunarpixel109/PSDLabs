@@ -8,19 +8,16 @@ using System.Threading.Tasks;
 using GameCode;
 using ConsoleRenderingHelper;
 
-namespace GameObjects
-{
+namespace GameObjects {
 
    
     
-    abstract class GameObject
-    {
+    abstract class GameObject {
         public int positionX, positionY, previousPositionX, previousPositionY;
         public Colour colour;
         public char sprite;
 
-        public GameObject(int startX, int startY, Colour colour, char sprite)
-        {
+        public GameObject(int startX, int startY, Colour colour, char sprite) {
             positionX = startX;
             positionY = startY;
             previousPositionX = startX;
@@ -33,8 +30,7 @@ namespace GameObjects
 
         public virtual void Draw(char[,] maze) {
             // Only update the position if it has changed
-            if (positionX != previousPositionX || positionY != previousPositionY)
-            {
+            if (positionX != previousPositionX || positionY != previousPositionY) {
                 // Erase the previous position
                 ConsoleRendering.WriteCharAtPoint(previousPositionX, previousPositionY, '░', MazeGame.foregroundColor, MazeGame.backgroundColor);
                 maze[previousPositionY, previousPositionX] = '░';

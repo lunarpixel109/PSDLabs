@@ -1,10 +1,8 @@
 ﻿using ConsoleRenderingHelper;
 using GameCode;
 
-namespace GameObjects
-{
-    class Player : GameObject
-    {
+namespace GameObjects {
+    class Player : GameObject {
         private int score;
 
         public Player(int startX, int startY): base(startX, startY, new Colour(143, 43 ,0), '╬') { }
@@ -37,8 +35,7 @@ namespace GameObjects
             
         }
         
-        private void Move(int deltaX, int deltaY, char[,] maze)
-        {
+        private void Move(int deltaX, int deltaY, char[,] maze) {
             int newPosX = positionX + deltaX;
             int newPosY = positionY + deltaY;
 
@@ -49,8 +46,7 @@ namespace GameObjects
             }
         }
 
-        public int getScore()
-        { 
+        public int getScore() {
             return score;
         }
     }

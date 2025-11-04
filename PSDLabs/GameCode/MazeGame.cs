@@ -4,11 +4,9 @@ using HighScoreLibrary;
 using ConsoleRenderingHelper;
 
 
-namespace GameCode
-{
+namespace GameCode {
 
-    class MazeGame
-    {
+    class MazeGame {
        // private Player player;
         private char[,] maze;
         private bool isRunning;
@@ -23,39 +21,32 @@ namespace GameCode
 
         ConsoleKey inputKey;
 
-        public MazeGame()
-        {
+        public MazeGame() {
             Initialize();
             highScoreManager = new HighScoreManager("highscores.txt");
         }
 
 
-        public void Run()
-        {
+        public void Run() {
             isRunning = true;
 
-            while (isRunning)
-            {
+            while (isRunning) {
 
-                if (Console.KeyAvailable)
-                {
+                if (Console.KeyAvailable) {
                     inputKey = Console.ReadKey(true).Key;
-                } else
-                {
+                } else {
                     inputKey = ConsoleKey.None;
                 }
 
                 // Update
                 player.Update(maze, inputKey);
-                foreach (var gameObject in gameObjects)
-                {
+                foreach (var gameObject in gameObjects) {
                     gameObject.Update(maze, inputKey);
                 }
 
                 // Render only if the player has moved
                 player.Draw(maze);
-                foreach (var gameObject in gameObjects)
-                {
+                foreach (var gameObject in gameObjects) {
                     gameObject.Draw(maze);
                 }
 
@@ -63,8 +54,7 @@ namespace GameCode
 
 
                 // Exit the game loop on ESC key
-                if (inputKey == ConsoleKey.Escape)
-                {
+                if (inputKey == ConsoleKey.Escape) {
                     isRunning = false;
                     highScoreManager.EndOfGame(player.getScore());
                 }
@@ -79,8 +69,7 @@ namespace GameCode
             Console.ReadKey(true);
         }
 
-        private void Initialize()
-        {
+        private void Initialize() {
             gameObjects = new List<GameObject>();
             player = new Player(1, 1);
             gameObjects.Add(new Ghost(13, 10, new Colour(0, 0, 255)));

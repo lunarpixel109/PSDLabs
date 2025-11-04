@@ -6,16 +6,23 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Formats.Asn1.AsnWriter;
 using ConsoleRenderingHelper;
+using PSDLabs;
 
-namespace GameObjects
-{
-    class Ghost: GameObject {
+namespace GameObjects {
+    class Ghost : GameObject
+    {
 
         private int deltaX;
         private int deltaY;
 
+        private Direction currentDirection;
+        private Direction previousDirection;
+        private Random random;
 
-        public Ghost(int startX, int startY, Colour colour) : base(startX, startY, colour, 'G') { }
+        public Ghost(int startX, int startY, Colour colour) : base(startX, startY, colour, '╳')
+        {
+            random = new Random();
+        }
 
         public override void Update(char[,] maze, ConsoleKey inputKey)
         {
@@ -25,24 +32,45 @@ namespace GameObjects
 
             deltaX = -1;
             deltaY = 0;
-            
-            
-            
-            
-        }
 
-        private void Move(int deltaX, int deltaY, char[,] maze)
-        {
-            int newPosX = positionX + deltaX;
-            int newPosY = positionY + deltaY;
+            currentDirection = new Direction(deltaX, deltaY);
+            previousDirection = currentDirection;
 
-            if (maze[newPosY, newPosX] == '░')
+            positionX += deltaX;
+            positionY += deltaY;
+
+            while (maze[positionX, positionY] == '▓')
             {
-                positionX = newPosX;
-                positionY = newPosY;
+                positionX = previousPositionX;
+                positionY = previousPositionY;
+
+                Direction newDirection = new Direction(0, 0);
+
+                do
+                {
+                    int direction = random.Next(0, 4);
+                    switch (direction)
+                    {
+                        case 0:
+                            newDirection = new Direction(0, -1); break;
+                        case 1:
+                            newDirection = new Direction(0, 1); break;
+                        case 2:
+                            newDirection = new Direction(1, 0); break;
+                        case 3:
+                            newDirection = new Direction(-1, 0); break;
+                    }
+                } while (newDirection == previousDirection.Invert());
+
+                previousDirection = currentDirection;
+                currentDirection = newDirection;
+
+                deltaX = currentDirection.x;
+                deltaY = currentDirection.y;
+
+                positionX += deltaX;
+                positionY += deltaY;
             }
         }
-
-
     }
 }
