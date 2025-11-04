@@ -7,6 +7,10 @@ namespace GameObjects {
 
         public Player(int startX, int startY): base(startX, startY, new Colour(143, 43 ,0), '╬') { }
 
+        public delegate void CollisionEventHandler();
+        public event CollisionEventHandler OnCollision;
+        
+
         public override void Update(char[,] maze, ConsoleKey inputKey)
         {
 
@@ -43,6 +47,12 @@ namespace GameObjects {
             {
                 positionX = newPosX;
                 positionY = newPosY;
+            }
+        }
+
+        public void CheckCollision(GameObject other) {
+            if (positionX == other.positionX && positionY == other.positionY) {
+                OnCollision?.Invoke();
             }
         }
 

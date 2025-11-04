@@ -42,6 +42,7 @@ namespace GameCode {
                 player.Update(maze, inputKey);
                 foreach (var gameObject in gameObjects) {
                     gameObject.Update(maze, inputKey);
+                    player.CheckCollision(gameObject);
                 }
 
                 // Render only if the player has moved
@@ -99,11 +100,18 @@ namespace GameCode {
                 {'▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓'} //22
             };
             DrawMaze();
+
+            player.OnCollision += HandleCollision;
         }
 
         private void DrawMaze()
         {
             ConsoleRendering.DrawCharGrid(0, 0, maze, foregroundColor, backgroundColor);
+        }
+
+        private void HandleCollision() {
+            isRunning = false;
+            highScoreManager.EndOfGame(player.getScore());
         }
 
     }

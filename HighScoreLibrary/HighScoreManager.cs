@@ -49,6 +49,7 @@ namespace HighScoreLibrary
 
         public void DisplayHighScores()
         {
+            Console.Clear();
             if (File.Exists(HighScoreFile))
             {
                 Console.WriteLine("High Scores:");
