@@ -33,5 +33,18 @@ public static class ConsoleRendering {
             }
         }
     }
+
+    public static void WriteLine(string line, Colour foregroundColour, Colour backgroundColour) {
+        string foregroundAnsi = $"\e[38;2;{foregroundColour.R};{foregroundColour.G};{foregroundColour.B}m";
+        string backgroundAnsi = $"\e[48;2;{backgroundColour.R};{backgroundColour.G};{backgroundColour.B}m";
+        Console.WriteLine(line);
+    }
     
+    public static void WriteLine(string line, int left, int top, Colour foregroundColour, Colour backgroundColour) {
+        string foregroundAnsi = $"\e[38;2;{foregroundColour.R};{foregroundColour.G};{foregroundColour.B}m";
+        string backgroundAnsi = $"\e[48;2;{backgroundColour.R};{backgroundColour.G};{backgroundColour.B}m";
+        Console.SetCursorPosition(left, top);
+        Console.WriteLine(line);
+    }
+
 }

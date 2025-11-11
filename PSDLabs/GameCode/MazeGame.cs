@@ -22,8 +22,8 @@ namespace GameCode {
         ConsoleKey inputKey;
 
         public MazeGame() {
+            highScoreManager = new HighScoreManager();
             Initialize();
-            highScoreManager = new HighScoreManager("highscores.txt");
         }
 
 
@@ -62,9 +62,6 @@ namespace GameCode {
 
                 System.Threading.Thread.Sleep(100); // Control the game speed
             }
-
-            highScoreManager.SortScores();
-            highScoreManager.DisplayHighScores();
             
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey(true);
@@ -102,6 +99,7 @@ namespace GameCode {
             DrawMaze();
 
             player.OnCollision += HandleCollision;
+            highScoreManager.LoginPlayer();
         }
 
         private void DrawMaze()
