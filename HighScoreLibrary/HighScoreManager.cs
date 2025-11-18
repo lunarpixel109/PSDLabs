@@ -9,11 +9,12 @@ public class HighScoreManager {
 
     
     public HighScoreManager() {
-        sqliteConnection = new SQLiteConnection("Data Source=highscore.db;Version=3;New=False;");
+        sqliteConnection = new SQLiteConnection("Data Source=highscore.db;Version=3;");
         try {
             sqliteConnection.Open();
         } catch (Exception e) {
             Console.WriteLine(e.Message);
+            Console.ReadKey(true);
         }
     }
 
@@ -31,8 +32,9 @@ public class HighScoreManager {
         if (SQLite_DataReader.HasRows) {
             currentPlayername = name;
         } else {
-            sqliteCommand.CommandText = "INSERT INTO player VALUES (@name)";
-            if (sqliteCommand.ExecuteNonQuery() == 0) {
+            var sqliteCommand2 = sqliteConnection.CreateCommand();
+            sqliteCommand2.CommandText = "INSERT INTO player VALUES (@name)";
+            if (sqliteCommand2.ExecuteNonQuery() == 0) {
                 Console.WriteLine("Player already exists, but hasnt been logged in, something went wrong.");
                 throw new Exception("Player already exists, but hasnt been logged in.");
             }
