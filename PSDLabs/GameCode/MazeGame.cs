@@ -63,7 +63,7 @@ namespace GameCode {
                 System.Threading.Thread.Sleep(100); // Control the game speed
             }
             
-            Console.WriteLine("Press any key to exit...");
+            ConsoleRendering.WriteLine("Press any key to exit...", new Colour(0, 0, 0), new Colour(255, 255, 255));
             Console.ReadKey(true);
         }
 
