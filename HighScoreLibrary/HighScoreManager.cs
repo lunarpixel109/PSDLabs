@@ -22,17 +22,17 @@ namespace HighScoreLibrary
     {
         private readonly string HighScoreFile;
 
+        private List<Player> highScores;
+
         public HighScoreManager(string highScoreFilePath)
         {
             HighScoreFile = highScoreFilePath;
+            highScores = new List<Player>();
         }
 
         public void SaveHighScore(string playerName, int moves)
         {
-            using (StreamWriter writer = new StreamWriter(HighScoreFile, true))
-            {
-                writer.WriteLine($"{playerName},{moves}");
-            }
+            
         }
 
         public void LoadHighScores()
@@ -86,10 +86,10 @@ namespace HighScoreLibrary
             {
                 Console.Write("Enter a valid name: ");
                 playerName = Console.ReadLine();
-                    if (playerName != "")
-                    {
-                        SaveHighScore(playerName, score);
-                    }
+                if (playerName != "")
+                {
+                    SaveHighScore(playerName, score);
+                }
             }
             // Save the high score
             
@@ -123,8 +123,6 @@ namespace HighScoreLibrary
                 }
             }
 
-            // Bubble sort implementation
-            // TODO: Switch to merge sort
             MergeSort(players);
 
             // Clear the file and save sorted scores

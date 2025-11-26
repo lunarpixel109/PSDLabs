@@ -29,7 +29,14 @@ namespace GameObjects {
 
         private GhostType type;
 
+
+        private List<Node> currentPath;
+        private Pathfinding pathfinder;
+        private int currentPathIndex;
         
+        private float timeBetweenMovements;
+        private float movementTimer;
+        private bool canMove;
         
         private int currentPlayerX;
         private int currentPlayerY;
@@ -40,59 +47,90 @@ namespace GameObjects {
         }
         
         
-        public Ghost(int startX, int startY, Colour colour) : base(startX, startY, colour, '╳')
+        public Ghost(int startX, int startY, Colour colour, float timeBetweenMoves, GhostType ghostType) : base(startX, startY, colour, '╳')
         {
             random = new Random();
+            
+            timeBetweenMovements = timeBetweenMoves;
+            canMove = true;
+            pathfinder = new Pathfinding();
+            
+            type = ghostType;
         }
 
-        public override void Update(char[,] maze, ConsoleKey inputKey)
+        public override void Update(char[,] maze, ConsoleKey inputKey, float deltaTime)
         {
 
-            previousPositionX = positionX;
-            previousPositionY = positionY;
-
-            deltaX = -1;
-            deltaY = 0;
-
-            switch (type) {
-                case GhostType.INKY:
-                    MoveInky();
-                    break;
-                case GhostType.BLINKY:
-                    MoveBlinky();
-                    break;
-                case GhostType.PINKY:
-                    MovePinky();
-                    break;
-                case GhostType.CLYDE:
-                    MoveClyde();
-                    break;
-            }
             
+
+            if (canMove)
+            {
+                previousPositionX = positionX;
+                previousPositionY = positionY;
+
+                //if (currentPlayerX == positionX && currentPlayerY == positionY) // Only recalculate the path if the player has moved
+                //{
+                    switch (type)
+                    {
+                        case GhostType.INKY:
+                            SetTargetInky();
+                            break;
+                        case GhostType.BLINKY:
+                            SetTargetBlinky();
+                            break;
+                        case GhostType.PINKY:
+                            SetTargetPinky();
+                            break;
+                        case GhostType.CLYDE:
+                            SetTargetClyde();
+                            break;
+                    }
+                //}
+
+                var directionX = positionX - currentPath[currentPathIndex].x;
+                var directionY = positionY - currentPath[currentPathIndex].y;
+
+                positionX += deltaX;
+                positionY += deltaY;
+
+                movementTimer = 0;
+                canMove = false;
+            }
+
+            if (movementTimer < timeBetweenMovements)
+            {
+                movementTimer += deltaTime;
+                canMove = false;
+            }
+            else
+            {
+                canMove = true;
+            }
+
+
         }
 
-        private void MoveInky() {
+        private void SetTargetInky() {
             // Targets the players position directly
             targetX = currentPlayerX;
             targetY = currentPlayerY;
             
-            int directionX = positionX - currentPlayerX;
-            int directionY = positionY - currentPlayerY;
-            
-            
-
+            currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
         }
-
-        private void MoveBlinky() {
+        
+        private void SetTargetBlinky() {
+            
             
         }
 
-        private void MovePinky() {
+        private void SetTargetPinky() {
             
         }
 
-        private void MoveClyde() {
+        private void SetTargetClyde() {
             
         }
+        
+        
     }
 }

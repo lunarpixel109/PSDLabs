@@ -26,7 +26,7 @@ namespace GameObjects {
             this.sprite = sprite;
         }
 
-        public abstract void Update(char[,] maze, ConsoleKey inputKey);
+        public abstract void Update(char[,] maze, ConsoleKey inputKey, float deltaTime);
 
         public virtual void Draw(char[,] maze) {
             // Only update the position if it has changed

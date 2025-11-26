@@ -14,7 +14,7 @@ namespace GameObjects {
         public event PositionUpdate OnPositionUpdate;
         
 
-        public override void Update(char[,] maze, ConsoleKey inputKey)
+        public override void Update(char[,] maze, ConsoleKey inputKey, float deltaTime)
         {
 
             previousPositionX = positionX;
