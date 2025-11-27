@@ -1,14 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Numerics;
+using System.Text.Json;
+using ConsoleRenderingHelper;
 
 
 namespace HighScoreLibrary
 {
-    struct Player 
+    class Player 
     {
-        public string name;
-        public int score;
+        public string name  { get; set; }
+        public int    score { get; set; }
 
         public void setScore(int s) { score = s; }
         public int getScore() { return score; }
@@ -32,14 +34,17 @@ namespace HighScoreLibrary
 
         public void SaveHighScore(string playerName, int moves)
         {
-            
+            highScores.Add(new Player() { name = playerName, score = moves });
         }
 
         public void LoadHighScores()
         {
             if (File.Exists(HighScoreFile))
             {
-                //DisplayHighScores();
+                using (StreamReader reader = new StreamReader(HighScoreFile)) {
+                    var loadedHighScores = JsonSerializer.Deserialize<List<Player>>(reader.ReadToEnd());
+                    highScores = loadedHighScores == null ? new List<Player>() : loadedHighScores;
+                }
             }
             else
             {
@@ -52,18 +57,11 @@ namespace HighScoreLibrary
             Console.Clear();
             if (File.Exists(HighScoreFile))
             {
-                Console.WriteLine("High Scores:");
-                using (StreamReader reader = new StreamReader(HighScoreFile))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        string[] parts = line.Split(',');
-                        if (parts.Length == 2)
-                        {
-                            Console.WriteLine($"{parts[0]}: {parts[1]} moves");
-                        }
-                    }
+                ConsoleRendering.WriteString(0, 0, "High Scores:" , new Colour(0, 0, 0), new Colour(255, 255, 255));
+                int currentLine = 0;
+                foreach (var player in highScores) {
+                    ConsoleRendering.WriteString(0, currentLine+1, $"{player.getName()}: {player.getScore()}", new Colour(255, 255, 255), new Colour(0, 0, 0));
+                    currentLine++;
                 }
             }
         }
@@ -77,6 +75,8 @@ namespace HighScoreLibrary
             Console.Write("Enter your name: ");
 
             string playerName = Console.ReadLine();
+            
+            LoadHighScores();
 
             if (playerName != "")
             {
@@ -95,43 +95,24 @@ namespace HighScoreLibrary
             
 
             // Load and display high scores
-            LoadHighScores();
             
 
         }
 
         public void SortScores()
         {
-            List<Player> players = new List<Player>();
 
-            if (File.Exists(HighScoreFile))
-            {
-                using (StreamReader reader = new StreamReader(HighScoreFile))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        string[] parts = line.Split(',');
-                        if (parts.Length == 2)
-                        {
-                            Player player = new Player();
-                            player.setName(parts[0]);
-                            player.setScore(int.Parse(parts[1]));
-                            players.Add(player);
-                        }
-                    }
-                }
-            }
-
-            MergeSort(players);
+            MergeSort(highScores);
 
             // Clear the file and save sorted scores
             File.WriteAllText(HighScoreFile, String.Empty);
 
-            foreach (var player in players)
-            {
-                SaveHighScore(player.getName(), player.getScore());
+            if (highScores.Count >= 11) {
+                highScores.RemoveRange(10, highScores.Count - 10);
             }
+            
+            string json = JsonSerializer.Serialize(highScores);
+            File.WriteAllText(HighScoreFile, json);
         }
 
         void MergeSort(List<Player> array) {

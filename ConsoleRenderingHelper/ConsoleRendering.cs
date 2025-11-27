@@ -13,7 +13,7 @@ public static class ConsoleRendering {
     public static void WriteCharAtPoint(int left, int top, char c, Colour foregroundColour, Colour backgroundColour) {
         string foregroundAnsi = $"\e[38;2;{foregroundColour.R};{foregroundColour.G};{foregroundColour.B}m";
         string backgroundAnsi = $"\e[48;2;{backgroundColour.R};{backgroundColour.G};{backgroundColour.B}m";
-        
+
         Console.SetCursorPosition(left, top);
         Console.Write($"{foregroundAnsi}{backgroundAnsi}{c}");
     }
@@ -24,14 +24,23 @@ public static class ConsoleRendering {
     /// <param name="offsetLeft">The x coordinate of the array</param>
     /// <param name="offsetTop">The y coordinate of the array</param>
     /// <param name="charGrid">The array to draw</param>
-    public static void DrawCharGrid(int offsetLeft, int offsetTop, char[,] charGrid, Colour foregroundColour, Colour backgroundColour) {
-        for (int y = 0; y < charGrid.GetLength(0); y++)
-        {
-            for (int x = 0; x < charGrid.GetLength(1); x++)
-            {
+    public static void DrawCharGrid(int    offsetLeft, int offsetTop, char[,] charGrid, Colour foregroundColour,
+                                    Colour backgroundColour) {
+        for (int y = 0; y < charGrid.GetLength(0); y++) {
+            for (int x = 0; x < charGrid.GetLength(1); x++) {
                 WriteCharAtPoint(offsetLeft + x, offsetTop + y, charGrid[y, x], foregroundColour, backgroundColour);
             }
         }
     }
-    
+
+    public static void WriteString(int    offsetLeft, int offsetTop, string message, Colour foregroundColour,
+                                 Colour backgroundColour) {
+        
+        string foregroundAnsi = $"\e[38;2;{foregroundColour.R};{foregroundColour.G};{foregroundColour.B}m";
+        string backgroundAnsi = $"\e[48;2;{backgroundColour.R};{backgroundColour.G};{backgroundColour.B}m";
+        
+        Console.SetCursorPosition(offsetLeft, offsetTop);
+        Console.WriteLine($"{foregroundAnsi}{backgroundAnsi}{message}");
+        
+    }
 }

@@ -33,11 +33,11 @@ namespace GameObjects {
             if (positionX != previousPositionX || positionY != previousPositionY) {
                 // Erase the previous position
                 ConsoleRendering.WriteCharAtPoint(previousPositionX, previousPositionY, '░', MazeGame.foregroundColor, MazeGame.backgroundColor);
-                maze[previousPositionY, previousPositionX] = '░';
+               // maze[previousPositionY, previousPositionX] = '░';
 
                 // Draw the player at the new position
                 ConsoleRendering.WriteCharAtPoint(positionX, positionY, sprite, colour, MazeGame.backgroundColor);
-                maze[positionY, positionX] = sprite;
+               // maze[positionY, positionX] = sprite;
             }
         }
     }

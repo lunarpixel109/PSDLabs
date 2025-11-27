@@ -41,23 +41,24 @@ namespace GameCode {
         public static Colour foregroundColor = new Colour(0, 143, 5);
         public static Colour backgroundColor = new Colour(0, 0, 0);
 
+        private bool playerFirstMove = false;
 
         ConsoleKey inputKey;
 
         public MazeGame() {
             Initialize();
-            highScoreManager = new HighScoreManager("highscores.txt");
         }
 
 
         public void Run() {
+            playerFirstMove = false;
             isRunning = true;
             DateTime dtPrev = DateTime.Now;
             DateTime dtNow = DateTime.Now;
             while (isRunning) {
                 
                 dtNow = DateTime.Now;
-                float deltaTime = (float)dtNow.Subtract(dtPrev).TotalMilliseconds * 1000f;
+                float deltaTime = (float)dtNow.Subtract(dtPrev).TotalSeconds;
                 dtPrev = dtNow;
                 
                 if (Console.KeyAvailable) {
@@ -68,9 +69,11 @@ namespace GameCode {
 
                 // Update
                 player.Update(Maze, inputKey, deltaTime);
-                foreach (var gameObject in gameObjects) {
-                    gameObject.Update(Maze, inputKey, deltaTime);
-                    player.CheckCollision(gameObject);
+                if (playerFirstMove) {
+                    foreach (var gameObject in gameObjects) {
+                        gameObject.Update(Maze, inputKey, deltaTime);
+                        player.CheckCollision(gameObject);
+                    }
                 }
 
                 // Render only if the player has moved
@@ -90,18 +93,21 @@ namespace GameCode {
 
                 System.Threading.Thread.Sleep(100); // Control the game speed
             }
-
+            
+            
             highScoreManager.SortScores();
             highScoreManager.DisplayHighScores();
-            
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey(true);
         }
 
         private void Initialize() {
+            Console.Clear();
+            highScoreManager = new HighScoreManager("highscores.json");
             gameObjects = new List<GameObject>();
             player = new Player(1, 1);
-            gameObjects.Add(new Ghost(13, 10, new Colour(0, 0, 255), .5f, GhostType.INKY));
+            gameObjects.Add(new Ghost(13, 10, new Colour(0, 255, 255), .05f, 0f, GhostType.INKY));
+            gameObjects.Add(new Ghost(12, 10, new Colour(255, 0, 0), .5f, 1f, GhostType.BLINKY));
+            //gameObjects.Add(new Ghost(14, 10, new Colour(255, 184, 255), .5f, 2.5f, GhostType.PINKY));
+            gameObjects.Add(new Ghost(11, 10, new Colour(255, 184, 82), .5f, 5f, GhostType.CLYDE));
             
             DrawMaze();
 
@@ -126,6 +132,7 @@ namespace GameCode {
                     ghost.UpdatePlayerPosition(x, y);
                 }
             }
+            playerFirstMove = true;
         }
 
     }

@@ -5,7 +5,7 @@ namespace GameObjects {
     class Player : GameObject {
         private int score;
 
-        public Player(int startX, int startY): base(startX, startY, new Colour(143, 43 ,0), '╬') { }
+        public Player(int startX, int startY): base(startX, startY, new Colour(252, 186, 3), '╬') { }
 
         public delegate void CollisionEventHandler();
         public event CollisionEventHandler OnCollision;
@@ -46,7 +46,7 @@ namespace GameObjects {
             int newPosX = positionX + deltaX;
             int newPosY = positionY + deltaY;
 
-            if (maze[newPosY, newPosX] == '░')
+            if (maze[newPosY, newPosX] != '▓')
             {
                 positionX = newPosX;
                 positionY = newPosY;

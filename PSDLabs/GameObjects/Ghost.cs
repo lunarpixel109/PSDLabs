@@ -31,45 +31,58 @@ namespace GameObjects {
 
 
         private List<Node> currentPath;
-        private Pathfinding pathfinder;
         private int currentPathIndex;
         
         private float timeBetweenMovements;
         private float movementTimer;
         private bool canMove;
+
+        private float releaseTimer;
+        private float releaseTime;
         
         private int currentPlayerX;
         private int currentPlayerY;
+        private int previousPlayerX;
+        private int previousPlayerY;
 
         public void UpdatePlayerPosition(int x, int y) {
+            
+            previousPlayerX = currentPlayerX;
+            previousPlayerY = currentPlayerY;
+            
             currentPlayerX = x;
             currentPlayerY = y;
         }
         
         
-        public Ghost(int startX, int startY, Colour colour, float timeBetweenMoves, GhostType ghostType) : base(startX, startY, colour, '╳')
+        public Ghost(int startX, int startY, Colour colour, float timeBetweenMoves, float releaseTime, GhostType ghostType) : base(startX, startY, colour, 'G')
         {
             random = new Random();
             
             timeBetweenMovements = timeBetweenMoves;
             canMove = true;
-            pathfinder = new Pathfinding();
-            
             type = ghostType;
+            
+            this.releaseTime = releaseTime;
+            releaseTimer     = 0;
+
+            currentPlayerX = 0;
+            currentPlayerY = 0;
         }
 
         public override void Update(char[,] maze, ConsoleKey inputKey, float deltaTime)
         {
 
+            previousPositionX = positionX;
+            previousPositionY = positionY;
             
-
+            //PrintPath();
+            
             if (canMove)
             {
-                previousPositionX = positionX;
-                previousPositionY = positionY;
 
-                //if (currentPlayerX == positionX && currentPlayerY == positionY) // Only recalculate the path if the player has moved
-                //{
+                // if (currentPlayerX != previousPlayerX && currentPlayerY != previousPlayerY) // Only recalculate the path if the player has moved
+                // {
                     switch (type)
                     {
                         case GhostType.INKY:
@@ -87,16 +100,20 @@ namespace GameObjects {
                     }
                 //}
 
-                var directionX = positionX - currentPath[currentPathIndex].x;
-                var directionY = positionY - currentPath[currentPathIndex].y;
+                //var directionX = positionX - currentPath[currentPathIndex].x;
+                //var directionY = positionY - currentPath[currentPathIndex].y;
 
-                positionX += deltaX;
-                positionY += deltaY;
+                positionX = currentPath[currentPathIndex].x;
+                positionY = currentPath[currentPathIndex].y;
+                
+                if (currentPathIndex < currentPath.Count) {
+                    currentPathIndex++;
+                }
 
                 movementTimer = 0;
                 canMove = false;
             }
-
+            
             if (movementTimer < timeBetweenMovements)
             {
                 movementTimer += deltaTime;
@@ -107,28 +124,92 @@ namespace GameObjects {
                 canMove = true;
             }
 
+            if (releaseTimer < releaseTime) {
+                releaseTimer += deltaTime;
+                canMove = false;
+                movementTimer = 0;
+            }
 
+
+        }
+        
+        private void Move(int deltaX, int deltaY, char[,] maze) {
+            int newPosX = positionX + deltaX;
+            int newPosY = positionY + deltaY;
+
+            if (maze[newPosY, newPosX] != '▓')
+            {
+                positionX = newPosX;
+                positionY = newPosY;
+            }
+        }
+        
+        // Debug path
+        private void PrintPath() {
+            if (currentPath != null) {
+                foreach (var node in currentPath) {
+                    ConsoleRendering.WriteCharAtPoint(node.x, node.y, 'P', new Colour(0, 0, 255), new Colour(255, 255, 255));
+                }
+            }
         }
 
         private void SetTargetInky() {
+            // Targets a position double that of the distance between blinky and pacman
+            targetX = currentPlayerX;
+            targetY = currentPlayerY;
+            
+            currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
+            // while (currentPath == null) {
+            //     currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
+            // }
+
+            currentPathIndex = 1;
+        }
+        
+        private void SetTargetBlinky() {
             // Targets the players position directly
             targetX = currentPlayerX;
             targetY = currentPlayerY;
             
             currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
-        }
-        
-        private void SetTargetBlinky() {
-            
+
+            currentPathIndex = 1;
             
         }
 
         private void SetTargetPinky() {
+            // Targets 2 Dots in front of the player
+            int playerDirectionX = currentPlayerX - previousPlayerX;
+            int playerDirectionY = currentPlayerY - previousPlayerY;
+
+            if (playerDirectionX < 0) {
+                targetX = currentPlayerX - 2;
+            } else if (playerDirectionX > 0) {
+                targetX = currentPlayerX + 2;
+            } else {
+                targetX = currentPlayerX;
+            }
+
+            if (playerDirectionY < 0) {
+                targetY = currentPlayerY - 2;
+            } else if (playerDirectionX > 0) {
+                targetY = currentPlayerY + 2;
+            } else {
+                targetY = currentPlayerY;
+            }
             
+            currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
+            currentPathIndex = 1;
         }
 
         private void SetTargetClyde() {
+            // Targets the players position directly
+            targetX = currentPlayerX;
+            targetY = currentPlayerY;
             
+            currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
+
+            currentPathIndex = 1;
         }
         
         
