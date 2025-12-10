@@ -3,16 +3,26 @@ using GameCode;
 
 namespace GameObjects {
     class Player : GameObject {
-        private int score;
+        
 
-        public Player(int startX, int startY): base(startX, startY, new Colour(252, 186, 3), '╬') { }
+        public Player(int startX, int startY, MazeGame game): base(startX, startY, new Colour(252, 186, 3), '╬') { this.game = game; }
 
         public delegate void CollisionEventHandler();
         public event CollisionEventHandler OnCollision;
 
         public delegate void PositionUpdate(int x, int y);
         public event PositionUpdate OnPositionUpdate;
-        
+
+        public delegate void ChangePowerPellet(bool active);
+        public event ChangePowerPellet OnChangePowerPellet;
+
+        private int score;
+
+        private bool powerPelletActive = false;
+        private float powerPelletDuration = 10.0f;
+        private float powerPelletTimer = 0.0f;
+
+        private MazeGame game;
 
         public override void Update(char[,] maze, ConsoleKey inputKey, float deltaTime)
         {
@@ -24,20 +34,26 @@ namespace GameObjects {
             {
                 case ConsoleKey.UpArrow:
                     Move(0, -1, maze);
-                    score++;
                     break;
                 case ConsoleKey.DownArrow:
                     Move(0, 1, maze);
-                    score++;
                     break;
                 case ConsoleKey.LeftArrow:
                     Move(-1, 0, maze);
-                    score++;
                     break;
                 case ConsoleKey.RightArrow:
                     Move(1, 0, maze);
-                    score++;
                     break;
+            }
+
+            if (powerPelletActive && powerPelletTimer > 0) {
+                powerPelletTimer -= deltaTime;
+            } else {
+                if (powerPelletActive) {
+                    powerPelletActive = false;
+                    OnChangePowerPellet?.Invoke(false);
+                }
+                powerPelletTimer = 0.0f;
             }
             
         }
@@ -56,11 +72,27 @@ namespace GameObjects {
 
         public void CheckCollision(GameObject other) {
             if (positionX == other.positionX && positionY == other.positionY) {
-                OnCollision?.Invoke();
+                if (other is Pellet) {
+                    if (((Pellet)other).isPowerPellet) {
+                        score += 50;
+                        powerPelletActive = true;
+                        OnChangePowerPellet?.Invoke(true);
+                    } else {
+                        score += 10;
+                    }
+                    game.DeleteObject(other);
+                } else if (!game.isInPowerPellet) {
+                     OnCollision?.Invoke();
+                } else if (game.isInPowerPellet && other is Ghost) {
+                    score += 200;
+                    var ghost = (Ghost)other;
+                    ghost.Reset();
+                }
+               
             }
         }
 
-        public int getScore() {
+        public int GetScore() {
             return score;
         }
     }

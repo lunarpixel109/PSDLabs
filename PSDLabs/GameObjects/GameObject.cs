@@ -15,29 +15,44 @@ namespace GameObjects {
     abstract class GameObject {
         public int positionX, positionY, previousPositionX, previousPositionY;
         public Colour colour;
+        public Colour BackgroundColour;
         public char sprite;
 
         public GameObject(int startX, int startY, Colour colour, char sprite) {
             positionX = startX;
             positionY = startY;
-            previousPositionX = startX;
-            previousPositionY = startY;
+            // set to an invalid position so the object is rendered at least once
+            previousPositionX = -1;
+            previousPositionY = -1;
             this.colour = colour;
+            this.sprite = sprite;
+        }
+
+        public GameObject(int startX, int startY, Colour colourForeground, Colour colourBackground, char sprite) {
+            positionX = startX;
+            positionY = startY;
+            // set to an invalid position so the object is rendered at least once
+            previousPositionX = -1;
+            previousPositionY = -1;
+            colour = colourForeground;
+            BackgroundColour = colourBackground;
             this.sprite = sprite;
         }
 
         public abstract void Update(char[,] maze, ConsoleKey inputKey, float deltaTime);
 
         public virtual void Draw(char[,] maze) {
-            // Only update the position if it has changed
-            if (positionX != previousPositionX || positionY != previousPositionY) {
-                // Erase the previous position
-                ConsoleRendering.WriteCharAtPoint(previousPositionX, previousPositionY, '░', MazeGame.foregroundColor, MazeGame.backgroundColor);
-               // maze[previousPositionY, previousPositionX] = '░';
+            bool hasPrev = previousPositionX >= 0 && previousPositionY >= 0;
 
-                // Draw the player at the new position
+            // Draw when this is the first draw (no previous) or the position has changed
+            if (!hasPrev || positionX != previousPositionX || positionY != previousPositionY) {
+                // Erase the previous position only if there was a valid previous position
+                if (hasPrev) {
+                    ConsoleRendering.WriteCharAtPoint(previousPositionX, previousPositionY, ' ', MazeGame.foregroundColor, MazeGame.backgroundColor);
+                }
+
+                // Draw the object at the current position
                 ConsoleRendering.WriteCharAtPoint(positionX, positionY, sprite, colour, MazeGame.backgroundColor);
-               // maze[positionY, positionX] = sprite;
             }
         }
     }

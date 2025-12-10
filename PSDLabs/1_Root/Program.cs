@@ -7,7 +7,7 @@ class Program {
         MazeGame game = new MazeGame();
         game.Run();
         
-        Console.WriteLine("Press escape to exit or press r to try again");
+        Console.WriteLine("Press R to retry or press any other key to try again");
         var key = Console.ReadKey(true);
         switch (key.Key) {
             case ConsoleKey.Escape:

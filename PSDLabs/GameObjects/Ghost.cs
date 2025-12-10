@@ -17,8 +17,7 @@ namespace GameObjects {
         CLYDE
     }
     
-    class Ghost : GameObject
-    {
+    class Ghost : GameObject {
 
         private int deltaX;
         private int deltaY;
@@ -29,9 +28,13 @@ namespace GameObjects {
 
         private GhostType type;
 
+        private Colour calmColour;
 
         private List<Node> currentPath;
         private int currentPathIndex;
+
+        private int startX;
+        private int startY;
         
         private float timeBetweenMovements;
         private float movementTimer;
@@ -45,6 +48,8 @@ namespace GameObjects {
         private int previousPlayerX;
         private int previousPlayerY;
 
+        private bool isRunning = false;
+
         public void UpdatePlayerPosition(int x, int y) {
             
             previousPlayerX = currentPlayerX;
@@ -54,9 +59,11 @@ namespace GameObjects {
             currentPlayerY = y;
         }
         
-        
-        public Ghost(int startX, int startY, Colour colour, float timeBetweenMoves, float releaseTime, GhostType ghostType) : base(startX, startY, colour, 'G')
-        {
+        public void SetRunningState(bool running) {
+            isRunning = running;
+        }
+
+        public Ghost(int startX, int startY, Colour colour, float timeBetweenMoves, float releaseTime, GhostType ghostType) : base(startX, startY, colour, 'G') {
             random = new Random();
             
             timeBetweenMovements = timeBetweenMoves;
@@ -68,36 +75,44 @@ namespace GameObjects {
 
             currentPlayerX = 0;
             currentPlayerY = 0;
+
+            calmColour = colour;
+
+            this.startX = startX;
+            this.startY = startY;
         }
 
-        public override void Update(char[,] maze, ConsoleKey inputKey, float deltaTime)
-        {
+        public override void Update(char[,] maze, ConsoleKey inputKey, float deltaTime) {
 
             previousPositionX = positionX;
             previousPositionY = positionY;
             
+            if (isRunning) {
+                colour = new Colour(0x19, 0x19, 0xA6); 
+            } else {
+                colour = calmColour;
+            }
+
             //PrintPath();
-            
-            if (canMove)
-            {
+
+            if (canMove) {
 
                 // if (currentPlayerX != previousPlayerX && currentPlayerY != previousPlayerY) // Only recalculate the path if the player has moved
                 // {
-                    switch (type)
-                    {
-                        case GhostType.INKY:
-                            SetTargetInky();
-                            break;
-                        case GhostType.BLINKY:
-                            SetTargetBlinky();
-                            break;
-                        case GhostType.PINKY:
-                            SetTargetPinky();
-                            break;
-                        case GhostType.CLYDE:
-                            SetTargetClyde();
-                            break;
-                    }
+                switch (type) {
+                    case GhostType.INKY:
+                        SetTargetInky();
+                        break;
+                    case GhostType.BLINKY:
+                        SetTargetBlinky();
+                        break;
+                    case GhostType.PINKY:
+                        SetTargetPinky();
+                        break;
+                    case GhostType.CLYDE:
+                        SetTargetClyde();
+                        break;
+                }
                 //}
 
                 //var directionX = positionX - currentPath[currentPathIndex].x;
@@ -105,7 +120,7 @@ namespace GameObjects {
 
                 positionX = currentPath[currentPathIndex].x;
                 positionY = currentPath[currentPathIndex].y;
-                
+
                 if (currentPathIndex < currentPath.Count) {
                     currentPathIndex++;
                 }
@@ -114,13 +129,10 @@ namespace GameObjects {
                 canMove = false;
             }
             
-            if (movementTimer < timeBetweenMovements)
-            {
+            if (movementTimer < timeBetweenMovements) {
                 movementTimer += deltaTime;
                 canMove = false;
-            }
-            else
-            {
+            } else {
                 canMove = true;
             }
 
@@ -132,13 +144,18 @@ namespace GameObjects {
 
 
         }
+
+        public void Reset() {
+            releaseTimer = 0;
+            positionX = startX;
+            positionY = startY;
+        }
         
         private void Move(int deltaX, int deltaY, char[,] maze) {
             int newPosX = positionX + deltaX;
             int newPosY = positionY + deltaY;
 
-            if (maze[newPosY, newPosX] != '▓')
-            {
+            if (maze[newPosY, newPosX] != '▓') {
                 positionX = newPosX;
                 positionY = newPosY;
             }
@@ -168,9 +185,15 @@ namespace GameObjects {
         
         private void SetTargetBlinky() {
             // Targets the players position directly
-            targetX = currentPlayerX;
-            targetY = currentPlayerY;
-            
+            if (!isRunning) {
+                targetX = currentPlayerX;
+                targetY = currentPlayerY;
+            } else {
+                // target the top left corner
+                targetX = 1;
+                targetY = 1;
+            }
+
             currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
 
             currentPathIndex = 1;
