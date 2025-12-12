@@ -10,9 +10,11 @@ using ConsoleRenderingHelper;
 
 namespace GameObjects {
 
-   
-    
+    /// <summary>
+    /// A base class for all game objects in the maze game.
+    /// </summary>
     abstract class GameObject {
+
         public int positionX, positionY, previousPositionX, previousPositionY;
         public Colour colour;
         public Colour BackgroundColour;
@@ -49,10 +51,12 @@ namespace GameObjects {
                 // Erase the previous position only if there was a valid previous position
                 if (hasPrev) {
                     ConsoleRendering.WriteCharAtPoint(previousPositionX, previousPositionY, ' ', MazeGame.foregroundColor, MazeGame.backgroundColor);
+                    maze[previousPositionY, previousPositionX] = ' ';
                 }
 
                 // Draw the object at the current position
                 ConsoleRendering.WriteCharAtPoint(positionX, positionY, sprite, colour, MazeGame.backgroundColor);
+                maze[positionY, positionX] = sprite;
             }
         }
     }

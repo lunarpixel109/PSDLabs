@@ -10,12 +10,17 @@ public static class ConsoleRendering {
     /// <param name="c">The char to draw</param>
     /// <param name="foregroundColour"></param>
     /// <param name="backgroundColour"></param>
-    public static void WriteCharAtPoint(int left, int top, char c, Colour foregroundColour, Colour backgroundColour) {
+    public static void WriteCharAtPoint(int left, int top, char c, Colour foregroundColour, Colour backgroundColour, bool bold = false) {
         string foregroundAnsi = $"\e[38;2;{foregroundColour.R};{foregroundColour.G};{foregroundColour.B}m";
         string backgroundAnsi = $"\e[48;2;{backgroundColour.R};{backgroundColour.G};{backgroundColour.B}m";
 
+
         Console.SetCursorPosition(left, top);
-        Console.Write($"{foregroundAnsi}{backgroundAnsi}{c}");
+        if (!bold) {
+            Console.Write($"{foregroundAnsi}{backgroundAnsi}{c}");
+        } else {
+            Console.Write($"\e[1m{foregroundAnsi}{backgroundAnsi}{c}\e[22m");
+        }
     }
 
     /// <summary>
@@ -25,7 +30,7 @@ public static class ConsoleRendering {
     /// <param name="offsetTop">The y coordinate of the array</param>
     /// <param name="charGrid">The array to draw</param>
     public static void DrawCharGrid(int    offsetLeft, int offsetTop, char[,] charGrid, Colour foregroundColour,
-                                    Colour backgroundColour) {
+                                    Colour backgroundColour, bool bold = false) {
         for (int y = 0; y < charGrid.GetLength(0); y++) {
             for (int x = 0; x < charGrid.GetLength(1); x++) {
                 WriteCharAtPoint(offsetLeft + x, offsetTop + y, charGrid[y, x], foregroundColour, backgroundColour);
@@ -34,13 +39,28 @@ public static class ConsoleRendering {
     }
 
     public static void WriteString(int    offsetLeft, int offsetTop, string message, Colour foregroundColour,
-                                 Colour backgroundColour) {
+                                 Colour backgroundColour, bool bold = false, bool newLine = true) {
         
         string foregroundAnsi = $"\e[38;2;{foregroundColour.R};{foregroundColour.G};{foregroundColour.B}m";
         string backgroundAnsi = $"\e[48;2;{backgroundColour.R};{backgroundColour.G};{backgroundColour.B}m";
         
+        if (newLine) {
+            message += "\n";
+        }
+
         Console.SetCursorPosition(offsetLeft, offsetTop);
-        Console.WriteLine($"{foregroundAnsi}{backgroundAnsi}{message}");
-        
+        if (!bold) {
+            Console.Write($"{foregroundAnsi}{backgroundAnsi}{message}");
+        } else {
+            Console.Write($"\e[1m{foregroundAnsi}{backgroundAnsi}{message}\e[22m");
+        }
+
+    }
+
+
+    public static void Clear(Colour backgroundColour) {
+        string backgroundAnsi = $"\e[48;2;{backgroundColour.R};{backgroundColour.G};{backgroundColour.B}m";
+        Console.Write(backgroundAnsi);
+        Console.Clear();
     }
 }

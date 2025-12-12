@@ -18,7 +18,7 @@ public class Pathfinding {
     private static char[,] _maze = MazeGame.Maze; //A stored version of the maze so the pathfinding algorithm knows the maze already
     private static int[,] _directions = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } }; //List of directions that allow the pathfinding to 
 
-    public static List<Node> FindPath(Node start, Node end) {
+    public static List<Node>? FindPath(Node start, Node end) {
         Queue<Node> queue = new Queue<Node>();
         HashSet<(int, int)> visited = new HashSet<(int, int)>();
         
@@ -51,7 +51,7 @@ public class Pathfinding {
     }
 
     public static bool IsWalkable(int x, int y) {
-        return _maze[y, x] != '▓';
+        return _maze[y, x] == ' ';
     } 
 
     private static List<Node> ReconstructPath(Node node) {

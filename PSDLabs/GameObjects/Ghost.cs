@@ -50,6 +50,12 @@ namespace GameObjects {
 
         private bool isRunning = false;
 
+        public int pinkyTargetX;
+        public int pinkyTargetY;
+
+        public int blinkyTargetX;
+        public int blinkyTargetY;
+
         public void UpdatePlayerPosition(int x, int y) {
             
             previousPlayerX = currentPlayerX;
@@ -63,7 +69,7 @@ namespace GameObjects {
             isRunning = running;
         }
 
-        public Ghost(int startX, int startY, Colour colour, float timeBetweenMoves, float releaseTime, GhostType ghostType) : base(startX, startY, colour, 'G') {
+        public Ghost(int startX, int startY, Colour colour, float timeBetweenMoves, float releaseTime, GhostType ghostType) : base(startX, startY, colour, '▀') {
             random = new Random();
             
             timeBetweenMovements = timeBetweenMoves;
@@ -171,70 +177,149 @@ namespace GameObjects {
         }
 
         private void SetTargetInky() {
-            // Targets a position double that of the distance between blinky and pacman
-            targetX = currentPlayerX;
-            targetY = currentPlayerY;
-            
-            currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
-            // while (currentPath == null) {
-            //     currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
-            // }
+            // Scatter mode: Inky heads to its scatter corner.
+            // Chase mode (normal): classic behaviour using Pinky's two-tiles-ahead and Blinky's target (published via SetTargetBlinky(true)).
+            if (isRunning) {
+                // Scatter -> bottom-right corner (matching pellets placed in MazeGame)
+                targetX = 25;
+                targetY = 20;
+            } else {
+                // Compute components using the helper functions in targetSelect mode
+                SetTargetPinky(true);   // sets pinkyTargetX / pinkyTargetY
+                SetTargetBlinky(true);  // sets blinkyTargetX / blinkyTargetY
 
-            currentPathIndex = 1;
+                // If Blinky's published values are not initialized (0,0) and match player start,
+                // keep a safe fallback to chase the player.
+                targetX = pinkyTargetX * 2 - blinkyTargetX;
+                targetY = pinkyTargetY * 2 - blinkyTargetY;
+            }
+
+            var maze = MazeGame.Maze;
+            if (maze != null) {
+                targetX = Math.Clamp(targetX, 0, maze.GetLength(1) - 1);
+                targetY = Math.Clamp(targetY, 0, maze.GetLength(0) - 1);
+            }
+
+            currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
+            if (currentPath == null || currentPath.Count < 2) {
+                // fallback: if we couldn't find a path to the computed target, chase the player
+                currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(currentPlayerX, currentPlayerY));
+            }
+
+            if (currentPath != null && currentPath.Count > 1) {
+                currentPathIndex = 1;
+            } else if (currentPath != null && currentPath.Count == 1) {
+                currentPathIndex = 0;
+            } else {
+                currentPath = new List<Node>() { new Node(positionX, positionY) };
+                currentPathIndex = 0;
+            }
         }
-        
-        private void SetTargetBlinky() {
-            // Targets the players position directly
-            if (!isRunning) {
+
+        private void SetTargetBlinky(bool targetSelect = false) {
+            // In scatter mode Blinky aims for his corner; otherwise chase player.
+            if (isRunning) {
+                // Scatter corner for Blinky -> top-right
+                targetX = 25;
+                targetY = 1;
+            } else {
                 targetX = currentPlayerX;
                 targetY = currentPlayerY;
+            }
+
+            if (targetSelect) {
+                blinkyTargetX = targetX;
+                blinkyTargetY = targetY;
             } else {
-                // target the top left corner
+                currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
+                if (currentPath != null && currentPath.Count > 1) {
+                    currentPathIndex = 1;
+                } else if (currentPath != null && currentPath.Count == 1) {
+                    currentPathIndex = 0;
+                } else {
+                    currentPath = new List<Node>() { new Node(positionX, positionY) };
+                    currentPathIndex = 0;
+                }
+            }
+
+        }
+
+        private void SetTargetPinky(bool targetSelect = false) {
+            // Scatter mode: Pinky -> top-left corner
+            if (isRunning) {
                 targetX = 1;
                 targetY = 1;
-            }
-
-            currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
-
-            currentPathIndex = 1;
-            
-        }
-
-        private void SetTargetPinky() {
-            // Targets 2 Dots in front of the player
-            int playerDirectionX = currentPlayerX - previousPlayerX;
-            int playerDirectionY = currentPlayerY - previousPlayerY;
-
-            if (playerDirectionX < 0) {
-                targetX = currentPlayerX - 2;
-            } else if (playerDirectionX > 0) {
-                targetX = currentPlayerX + 2;
             } else {
-                targetX = currentPlayerX;
+                // Targets 2 tiles in front of the player
+                int playerDirectionX = currentPlayerX - previousPlayerX;
+                int playerDirectionY = currentPlayerY - previousPlayerY;
+
+                if (playerDirectionX < 0) {
+                    targetX = currentPlayerX - 2;
+                } else if (playerDirectionX > 0) {
+                    targetX = currentPlayerX + 2;
+                } else {
+                    targetX = currentPlayerX;
+                }
+
+                if (playerDirectionY < 0) {
+                    targetY = currentPlayerY - 2;
+                } else if (playerDirectionY > 0) { // fixed: check Y
+                    targetY = currentPlayerY + 2;
+                } else {
+                    targetY = currentPlayerY;
+                }
             }
 
-            if (playerDirectionY < 0) {
-                targetY = currentPlayerY - 2;
-            } else if (playerDirectionX > 0) {
-                targetY = currentPlayerY + 2;
+            if (targetSelect) {
+                pinkyTargetX = targetX;
+                pinkyTargetY = targetY;
             } else {
-                targetY = currentPlayerY;
+                currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
+                if (currentPath != null && currentPath.Count > 1) {
+                    currentPathIndex = 1;
+                } else if (currentPath != null && currentPath.Count == 1) {
+                    currentPathIndex = 0;
+                } else {
+                    currentPath = new List<Node>() { new Node(positionX, positionY) };
+                    currentPathIndex = 0;
+                }
             }
-            
-            currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
-            currentPathIndex = 1;
+
+
         }
 
         private void SetTargetClyde() {
-            // Targets the players position directly
-            targetX = currentPlayerX;
-            targetY = currentPlayerY;
-            
-            currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
+            // Scatter mode: Clyde -> bottom-left corner
+            if (isRunning) {
+                targetX = 1;
+                targetY = 20;
+            } else {
+                // Targets the player's position directly, but if too close, head to bottom-left
+                targetX = currentPlayerX;
+                targetY = currentPlayerY;
 
-            currentPathIndex = 1;
+                if (Distance(currentPlayerX, currentPlayerY, positionX, positionY) < 8) {
+                    // Target bottom-left corner
+                    targetX = 1;
+                    targetY = 20;
+                }
+            }
+
+            currentPath = Pathfinding.FindPath(new Node(positionX, positionY), new Node(targetX, targetY));
+            if (currentPath != null && currentPath.Count > 1) {
+                currentPathIndex = 1;
+            } else if (currentPath != null && currentPath.Count == 1) {
+                currentPathIndex = 0;
+            } else {
+                currentPath = new List<Node>() { new Node(positionX, positionY) };
+                currentPathIndex = 0;
+            }
         }
-        
+
+        private int Distance(int x1, int y1, int x2, int y2) {
+            return (int)Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
+        }
         
     }
 }

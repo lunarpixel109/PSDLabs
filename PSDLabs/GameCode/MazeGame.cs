@@ -32,8 +32,33 @@ namespace GameCode {
                 {'▓', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '▓'},//21
                 {'▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓'} //22
             };
+
+        public static char[,] StartingMaze = new char[,] {
+                {'▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓'},//1
+                {'▓', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '▓', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '▓'},//2
+                {'▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓', '▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓', '▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓'},//3
+                {'▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓', '▓', '▓', '▓', '▓', ' ', ' ', ' ', '▓', '▓', '▓', '▓', '▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓'},//4
+                {'▓', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '▓', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '▓'},//5
+                {'▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓'},//6
+                {'▓', ' ', ' ', ' ', ' ', ' ', ' ', '▓', ' ', ' ', ' ', ' ', ' ', '▓', ' ', ' ', ' ', ' ', ' ', '▓', ' ', ' ', ' ', ' ', ' ', ' ', '▓'},//7
+                {'▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓'},//8
+                {'▓', ' ', ' ', ' ', ' ', '▓', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '▓', ' ', ' ', ' ', ' ', '▓'},//9
+                {'▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', '▓', '▓', ' ', ' ', ' ', '▓', '▓', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓'},//10
+                {'▓', ' ', ' ', ' ', ' ', ' ', ' ', '▓', ' ', '▓', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '▓', ' ', '▓', ' ', ' ', ' ', ' ', ' ', ' ', '▓'},//11
+                {'▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓'},//12
+                {'▓', ' ', ' ', ' ', ' ', '▓', ' ', '▓', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '▓', ' ', '▓', ' ', ' ', ' ', ' ', '▓'},//13
+                {'▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓'},//14
+                {'▓', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '▓'},//15
+                {'▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓', '▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓', '▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓'},//16
+                {'▓', ' ', ' ', ' ', ' ', '▓', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '▓', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '▓', ' ', ' ', ' ', ' ', '▓'},//17
+                {'▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓'},//18
+                {'▓', ' ', ' ', ' ', ' ', ' ', ' ', '▓', ' ', ' ', ' ', ' ', ' ', '▓', ' ', ' ', ' ', ' ', ' ', '▓', ' ', ' ', ' ', ' ', ' ', ' ', '▓'},//19
+                {'▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓', '▓', '▓', '▓', '▓', ' ', '▓', ' ', '▓', '▓', '▓', '▓', '▓', ' ', '▓', '▓', '▓', '▓', ' ', '▓'},//20
+                {'▓', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '▓'},//21
+                {'▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓', '▓'} //22
+            };
         private bool isRunning;
-        private HighScoreManager highScoreManager;
+        public HighScoreManager highScoreManager;
 
         Player player;
         List<GameObject> gameObjects;
@@ -73,8 +98,7 @@ namespace GameCode {
                 // Render only if the player has moved
                 player.Draw(Maze);
                 for (int i = 0; i < gameObjects.Count(); i++) {
-                    var gameObject = gameObjects[i];
-                    gameObject.Draw(Maze);
+                    gameObjects[i].Draw(Maze);
                 }
 
                 
@@ -104,20 +128,21 @@ namespace GameCode {
         }
 
         private void Initialize() {
+            Maze = (char[,])StartingMaze.Clone();
             Console.Clear();
             highScoreManager = new HighScoreManager("highscores.json");
             gameObjects = new List<GameObject>();
-            player = new Player(1, 1, this);
-            gameObjects.Add(new Ghost(13, 10, new Colour(0, 255, 255), .05f, 0f, GhostType.INKY));
+            player = new Player(13, 20, this);
+            gameObjects.Add(new Ghost(13, 10, new Colour(0, 255, 255), .5f, 0f, GhostType.INKY));
             gameObjects.Add(new Ghost(12, 10, new Colour(255, 0, 0), .5f, 1f, GhostType.BLINKY));
-            //gameObjects.Add(new Ghost(14, 10, new Colour(255, 184, 255), .5f, 2.5f, GhostType.PINKY));
+            gameObjects.Add(new Ghost(14, 10, new Colour(255, 184, 255), .5f, 2.5f, GhostType.PINKY));
             gameObjects.Add(new Ghost(11, 10, new Colour(255, 184, 82), .5f, 5f, GhostType.CLYDE));
             
             for (int y = 0; y < Maze.GetLength(0); y++) {
                 for (int x = 0; x < Maze.GetLength(1); x++) {
                     if (Maze[y, x] == ' ') {
                         // Place power pellets at specific locations
-                        if ((x == 1 && y == 1) || (x == 25 && y == 1) || (x == 1 && y == 21) || (x == 25 && y == 21)) {
+                        if ((x == 1 && y == 1) || (x == 25 && y == 1) || (x == 1 && y == 20) || (x == 25 && y == 20)) {
                             gameObjects.Add(new Pellet(x, y, true));
                         } else {
                             gameObjects.Add(new Pellet(x, y, false));
@@ -125,6 +150,8 @@ namespace GameCode {
                     }
                 }
             }
+
+            gameObjects.Add(new HUD(22, this));
 
             DrawMaze();
 
@@ -135,17 +162,25 @@ namespace GameCode {
 
         private void DrawMaze()
         {
-            ConsoleRendering.DrawCharGrid(0, 0, Maze, foregroundColor, backgroundColor);
+            ConsoleRendering.DrawCharGrid(0, 0, StartingMaze, foregroundColor, backgroundColor);
         }
 
         private void HandlePowerPelletChange(bool active) {
             foreach (var gameObject in gameObjects) {
-                if (gameObject.GetType() == typeof(Ghost)) {
+                if (gameObject is Ghost) {
                     Ghost ghost = (Ghost)gameObject;
                     ghost.SetRunningState(active);
+                } else if (gameObject is HUD && active) {
+                    HUD hud = (HUD)gameObject;
+                    hud.StartCountdown();
                 }
             }
             isInPowerPellet = active;
+            if (!active) {
+                Console.Beep(659, 100);
+                Console.Beep(523, 100);
+                Console.Beep(440, 100);
+            }
         }
 
         private void HandleCollision() {
@@ -167,6 +202,11 @@ namespace GameCode {
 
         public void DeleteObject(GameObject obj) {
             gameObjects.Remove(obj);
+        }
+
+
+        public int GetScore() {
+            return player.GetScore();
         }
     }
 }

@@ -7,7 +7,7 @@ using ConsoleRenderingHelper;
 
 namespace HighScoreLibrary
 {
-    class Player 
+    public class PlayerScore 
     {
         public string name  { get; set; }
         public int    score { get; set; }
@@ -24,17 +24,17 @@ namespace HighScoreLibrary
     {
         private readonly string HighScoreFile;
 
-        private List<Player> highScores;
+        public List<PlayerScore> highScores;
 
         public HighScoreManager(string highScoreFilePath)
         {
             HighScoreFile = highScoreFilePath;
-            highScores = new List<Player>();
+            highScores = new List<PlayerScore>();
         }
 
         public void SaveHighScore(string playerName, int moves)
         {
-            highScores.Add(new Player() { name = playerName, score = moves });
+            highScores.Add(new PlayerScore() { name = playerName, score = moves });
         }
 
         public void LoadHighScores()
@@ -42,8 +42,8 @@ namespace HighScoreLibrary
             if (File.Exists(HighScoreFile))
             {
                 using (StreamReader reader = new StreamReader(HighScoreFile)) {
-                    var loadedHighScores = JsonSerializer.Deserialize<List<Player>>(reader.ReadToEnd());
-                    highScores = loadedHighScores == null ? new List<Player>() : loadedHighScores;
+                    var loadedHighScores = JsonSerializer.Deserialize<List<PlayerScore>>(reader.ReadToEnd());
+                    highScores = loadedHighScores == null ? new List<PlayerScore>() : loadedHighScores;
                 }
             }
             else
@@ -68,11 +68,20 @@ namespace HighScoreLibrary
 
         public void EndOfGame(int score)
         {
-            Console.Clear();
-            Console.WriteLine("Game Over!");
+            ConsoleRendering.Clear(new Colour(0, 0, 0));
+            string[] gameOverText = {
+                " ▄████  ▄████▄ ██▄  ▄██ ██████   ▄████▄ ██  ██ ██████ █████▄  ",
+                "██  ▄▄▄ ██▄▄██ ██ ▀▀ ██ ██▄▄     ██  ██ ██▄▄██ ██▄▄   ██▄▄██▄ ",
+                " ▀███▀  ██  ██ ██    ██ ██▄▄▄▄   ▀████▀  ▀██▀  ██▄▄▄▄ ██   ██ "
+            };
+
+            foreach (string line in gameOverText) {
+                ConsoleRendering.WriteString(0, Array.IndexOf(gameOverText, line), line, new Colour(255, 0, 0), new Colour(0, 0, 0), true);
+            }
+
 
             // Ask for the player's name
-            Console.Write("Enter your name: ");
+            ConsoleRendering.WriteString(0, 4, "Enter your name: ", new Colour(255, 255, 255), new Colour(0, 0, 0));
 
             string playerName = Console.ReadLine();
             
@@ -115,15 +124,15 @@ namespace HighScoreLibrary
             File.WriteAllText(HighScoreFile, json);
         }
 
-        void MergeSort(List<Player> array) {
+        void MergeSort(List<PlayerScore> array) {
             
             int length = array.Count;
 
             if (length <= 1) return; // Base Case
 
             int middle = length / 2;
-            List<Player> left = new  List<Player>(middle);
-            List<Player> right = new  List<Player>(length - middle);
+            List<PlayerScore> left = new  List<PlayerScore>(middle);
+            List<PlayerScore> right = new  List<PlayerScore>(length - middle);
 
 
 
@@ -142,7 +151,7 @@ namespace HighScoreLibrary
 
         }
 
-        void Merge(List<Player> leftArray, List<Player> rightArray, List<Player> array) {
+        void Merge(List<PlayerScore> leftArray, List<PlayerScore> rightArray, List<PlayerScore> array) {
             
             int leftSize =  array.Count / 2;
             int rightSize = array.Count - leftSize;

@@ -5,7 +5,7 @@ namespace GameObjects {
     class Player : GameObject {
         
 
-        public Player(int startX, int startY, MazeGame game): base(startX, startY, new Colour(252, 186, 3), '╬') { this.game = game; }
+        public Player(int startX, int startY, MazeGame game): base(startX, startY, new Colour(252, 186, 3), '▚') { this.game = game; }
 
         public delegate void CollisionEventHandler();
         public event CollisionEventHandler OnCollision;
@@ -49,7 +49,7 @@ namespace GameObjects {
             if (powerPelletActive && powerPelletTimer > 0) {
                 powerPelletTimer -= deltaTime;
             } else {
-                if (powerPelletActive) {
+               if (powerPelletActive) {
                     powerPelletActive = false;
                     OnChangePowerPellet?.Invoke(false);
                 }
@@ -74,17 +74,23 @@ namespace GameObjects {
             if (positionX == other.positionX && positionY == other.positionY) {
                 if (other is Pellet) {
                     if (((Pellet)other).isPowerPellet) {
-                        score += 50;
+                        Console.Beep(440, 100);
+                        Console.Beep(523, 100);
+                        Console.Beep(659, 100);
+                        score += 100;
                         powerPelletActive = true;
+                        powerPelletTimer = powerPelletDuration;
                         OnChangePowerPellet?.Invoke(true);
                     } else {
-                        score += 10;
+                        score += 50;
+                        Console.Beep(440, 100);
                     }
                     game.DeleteObject(other);
                 } else if (!game.isInPowerPellet) {
                      OnCollision?.Invoke();
                 } else if (game.isInPowerPellet && other is Ghost) {
-                    score += 200;
+                    Console.Beep(880, 100);
+                    score += 500;
                     var ghost = (Ghost)other;
                     ghost.Reset();
                 }

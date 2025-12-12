@@ -12,7 +12,7 @@ namespace GameObjects {
         public bool isPowerPellet;
 
 
-        public Pellet(int startX, int startY, bool isPowerPellet) : base(startX, startY, new Colour(255, 255, 255), MazeGame.backgroundColor, isPowerPellet ? '`' : '*') {
+        public Pellet(int startX, int startY, bool isPowerPellet) : base(startX, startY, new Colour(255, 255, 255), MazeGame.backgroundColor, isPowerPellet ? '◦' : '•') {
             this.isPowerPellet = isPowerPellet;
         }
 
